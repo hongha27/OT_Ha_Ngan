@@ -47,9 +47,9 @@ END
 --Các mảnh đất tiếp giáp với mảnh đất của ông/bà A
 declare @D Geometry
 set @D=(select VITRI.MakeValid() from LAND where TEN='D')
-select TEN
+select TEN, VITRI.MakeValid().STArea()
 from LAND
-where VITRI.MakeValid().STTouches(@D)=1
+--where 
 --
 declare @W geometry
 set @W=GEOMETRY::STPolyFromText('POLYGON((-4 0,-4 3,15 3,15 0,-4 0))',4326)
