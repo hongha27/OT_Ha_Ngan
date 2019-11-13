@@ -44,6 +44,18 @@ SELECT TEN
 FROM LAND
 WHERE @D.MakeValid().STTouches(VITRI.MakeValid())=1	
 END 
+--Các mảnh đất tiếp giáp với mảnh đất của ông/bà A
+declare @D Geometry
+set @D=(select VITRI.MakeValid() from LAND where TEN='D')
+select TEN
+from LAND
+where VITRI.MakeValid().STTouches(@D)=1
+--
+declare @W geometry
+set @W=GEOMETRY::STPolyFromText('POLYGON((-4 0,-4 3,15 3,15 0,-4 0))',4326)
+--select @W
+select TEN,@W.MakeValid().STIntersection(VITRI.MakeValid()).STArea() as DienTichBiMat,VITRI.MakeValid().STDifference(@W.MakeValid().STIntersection(VITRI.MakeValid())) as VITRI
+from LAND
 
 EXEC KTRA @TEN='A'
 
@@ -55,4 +67,5 @@ set @M= GEOMETRY::STGeomFromText('LINESTRING (0 3,1 3)', 0)
 set @N= GEOMETRY::STGeomFromText('LINESTRING (0 0,0 3)', 0)
 SELECT @M
 SELECT @N
+
 
