@@ -1,4 +1,4 @@
-CREATE DATABASE SPARTIAL
+﻿CREATE DATABASE SPARTIAL
 GO
 USE SPARTIAL
 GO
@@ -29,4 +29,16 @@ GO
 SELECT * FROM LAND
 GO
 --------LAB 7------------
+--Các mảnh đất tiếp giáp với mảnh đất của ông/bà A
+declare @D Geometry
+set @D=(select VITRI.MakeValid() from LAND where TEN='D')
+select TEN
+from LAND
+where VITRI.MakeValid().STTouches(@D)=1
 --
+declare @W geometry
+set @W=GEOMETRY::STPolyFromText('POLYGON((-4 0,-4 3,15 3,15 0,-4 0))',4326)
+--select @W
+select TEN,@W.MakeValid().STIntersection(VITRI.MakeValid()).STArea() as DienTichBiMat,VITRI.MakeValid().STDifference(@W.MakeValid().STIntersection(VITRI.MakeValid())) as VITRI
+from LAND
+
